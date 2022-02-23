@@ -3,16 +3,28 @@ import NewsItem from './NewsItem'
 import Spinner from './Spinner';
 export class News extends Component {
 
-    constructor() {
-        super();
+    // makeFirstLetterCapital = (s) => {
+    //     return s[0].toUppercase() + s.slice(1);
+    // }
+
+    constructor(props) {
+
+        
+
+        super(props);
         // console.log("this is a contructor");
         this.state = {
             article: [],
             loading: false,
             page: 1
-            
+
 
         };
+
+
+
+        // document.title = `NewsMonk - ${this.makeFirstLetterCapital(this.props.category)}`;
+        document.title = `NewsMonk - ${this.props.category}`;
     }
 
     async componentDidMount() {
@@ -21,14 +33,18 @@ export class News extends Component {
         this.setState({ loading: true })
         let data = await fetch(url);
         let parsedData = await data.json();
-        this.setState({loading : false})
-       
+        this.setState({ loading: false })
+
+
+
 
         // console.log(data);
         // console.log(parsedData);
-        this.setState({ article: parsedData.articles, totalResults: parsedData.totalResults , loading: false })
+        this.setState({ article: parsedData.articles, totalResults: parsedData.totalResults, loading: false })
 
     }
+
+
 
     handleNextPage = async () => {
         console.log("next button")
@@ -44,7 +60,7 @@ export class News extends Component {
             this.setState({
                 article: parsedData.articles,
                 page: this.state.page + 1,
-                loading : false
+                loading: false
             })
         }
         else {
@@ -67,7 +83,7 @@ export class News extends Component {
 
 
             let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=c3d07ccd5302460798dd69e6bd04aa42&page=${this.state.page - 1}&pageSize=5`;
-            this.setState({loading : true})
+            this.setState({ loading: true })
             let data = await fetch(url);
             let parsedData = await data.json();
             // console.log(data);
@@ -75,7 +91,7 @@ export class News extends Component {
             this.setState({
                 article: parsedData.articles,
                 page: this.state.page - 1,
-                loading : false
+                loading: false
             })
         }
     }
@@ -91,9 +107,9 @@ export class News extends Component {
                 {this.state.loading && < Spinner />}
 
                 <div className="row">
-                    { !this.state.loading && this.state.article.map((element) => ( // here don't use curly braces. its a fun but dont return anything .
+                    {!this.state.loading && this.state.article.map((element) => ( // here don't use curly braces. its a fun but dont return anything .
                         <div className="col-md-4" key={element.url} >
-                            < NewsItem title={element.title ? element.title : " here is the news with no title😂😂 "} description={element.description ? element.description : " "} newsUrl={element.url} imageUrl={element.urlToImage ? element.urlToImage : "https://media-cldnry.s-nbcnews.com/image/upload/newscms/2018_21/2442281/og-nbcnews1200x630.png"} />
+                            < NewsItem author={element.author} source={element.source.name} date={element.publishedAt} title={element.title ? element.title : " here is the news with no title😂😂 "} description={element.description ? element.description : " "} newsUrl={element.url} imageUrl={element.urlToImage ? element.urlToImage : "https://media-cldnry.s-nbcnews.com/image/upload/newscms/2018_21/2442281/og-nbcnews1200x630.png"} />
                         </div>
                     ))
                     }
